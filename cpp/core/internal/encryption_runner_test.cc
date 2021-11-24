@@ -36,6 +36,18 @@ class FakeEndpointChannel : public EndpointChannel {
  public:
   FakeEndpointChannel(InputStream* in, OutputStream* out)
       : in_(in), out_(out) {}
+  proto::connections::ConnectionTechnology GetTechnology() const override {
+    return proto::connections::ConnectionTechnology::
+        CONNECTION_TECHNOLOGY_BLE_GATT;
+  }
+
+  proto::connections::ConnectionBand GetBand() const override {
+    return proto::connections::ConnectionBand::CONNECTION_BAND_CELLULAR_BAND_2G;
+  }
+
+  int GetFrequency() const override { return 0; }
+  int GetTryCount() const override { return 0; }
+
   ExceptionOr<ByteArray> Read() override {
     read_timestamp_ = SystemClock::ElapsedRealtime();
     return in_ ? in_->Read(Pipe::kChunkSize)
